@@ -5,3 +5,4 @@ Finally, since the xgboost model will not be used so I decidied to remove it fro
 
 6.b.iii. Logistic Regression with Feature Importante and with Balance is the selected model
 
+I needed to change a little the `requirements.txt` file to make it work with the `requirements-test.txt`. And also added a `conftest.py` file because of the relative route of the data file that is read in the `test_model.py`
