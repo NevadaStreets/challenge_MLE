@@ -5,7 +5,7 @@ import pandas as pd
 from fastapi import HTTPException
 from pydantic import BaseModel
 
-from challenge.model import DelayModel
+from challenge.model import DEFAULT_DATA_PATH, DelayModel
 
 # Airlines (OPERA) present in the training dataset. A flight operated by an
 # airline outside this set cannot be encoded into the model's feature space.
@@ -50,6 +50,16 @@ class PredictRequest(BaseModel):
 
 app = fastapi.FastAPI()
 model = DelayModel()
+
+
+@app.on_event("startup")
+def _warm_up_model() -> None:
+    # Train the model once at startup so the first request doesn't pay the
+    # training cost and concurrent requests don't race on the lazy
+    # initialization in `DelayModel.predict` (relevant under load).
+    data = pd.read_csv(DEFAULT_DATA_PATH, low_memory=False)
+    features, target = model.preprocess(data, target_column="delay")
+    model.fit(features, target)
 
 
 @app.get("/health", status_code=200)
