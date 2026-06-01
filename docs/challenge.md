@@ -5,8 +5,8 @@ Finally, since the xgboost model will not be used so I decided to remove it from
 
 **6.b.iii. Logistic Regression with Feature Importante and with Balance** is the selected model. 
 
-# Note
-There were some typos in the notebook like the one above **Feature Importante** instead of **Feature Importance** but I don't know it those are part of the bugs that I need to fix so I let them excactly as I found them.
+## Note
+There were some typos in the notebook like the one above **Feature Importante** instead of **Feature Importance** but I don't know if those are part of the bugs that I need to fix so I left them exactly as I found them.
 
 ## Testing
 I needed to change a little the `requirements.txt` file to make it work with the `requirements-test.txt`. And also added a `conftest.py` file because of the relative path of the data file that needs to be read in the `test_model.py`.
@@ -14,7 +14,7 @@ I needed to change a little the `requirements.txt` file to make it work with the
 The `make model-test` passed the 4 tests with a 98% coverage on `model.py`.
 
 ## Fixes and extra code
-Finally, I added a `.gitignore` to stop tracking the files that are not necesary to have in the remote version.
+Finally, I added a `.gitignore` to stop tracking the files that are not necessary to have in the remote version.
 I corrected the invalid `Union(...)` (parentheses) return annotation to `Union[...]` in the provided `preprocess` signature.
 
 ## Changelog
@@ -34,7 +34,7 @@ Finally, the implementation can lazy train the model on the first prediction in 
 The `make api-test` passed the 4 tests with a 91% coverage on `api.py`.
 
 ## Changelog
-The full changelog of this part is this [PR](https://github.com/NevadaStreets/challenge_MLE/pull/3). These changes were merged into `develop`
+The full changelog of this part is in this [PR](https://github.com/NevadaStreets/challenge_MLE/pull/3). These changes were merged into `develop`
 
 # Part III
 
@@ -50,3 +50,23 @@ After completed the deployment, I added the URL to the make file and ran the tes
 ## Testing
 For the test part I needed to fix the `requirements-test.txt`. There was a problem with locust 1.6 dependency on Flask 1.1.x. It is incompatible with modern `Jinja2/Werkzeug/MarkupSafe/itsdangerous`. I pinned the classic compatible stack in the requirements file and then `make stress-test` ran without errors.
 After that fix `make stress-test` tested 6,998 requests with 0 failures.
+
+## Changelog
+The full changelog of this part is in this [PR](https://github.com/NevadaStreets/challenge_MLE/pull/4). These changes were merged into `develop`
+
+# Part IV
+## CI/CD
+For this part I added the two files(`ci.yml`,`cd.yml`) into `.github/workflows`. But, to make them work properly I needed to do some things first in the deployment.
+- I created a service account key to make the deployments from the github actions.
+- I stored this key in the secrets of the repository, so it will be *(allegedly)* safe to be used in the deployments.
+
+After the creation of those resources I added the CI/CD files following this logic:
+- `ci.yml`: This github action is in charge of the Continuous Integration. Because this is a simple repository and code, this workflow will only run the tests defined in the `README.md`. It will be activated in `push` commands on the `develop` and in PRs made pointing to the `develop` and `main` branches. To finish, this workflow also triggers on `workflow_dispatch` and `workflow_call` so it can be run manually in Github and be called in another workflow.
+- `cd.yml`: This github action is in charge of the Continuous Delivery. This workflow needs to run the tests defined in the `README.md` to assure that everything is working properly. To make this, it reuses the `ci.yml` workflow as a required job. After that, it creates a new deployment every time there is a new `push` on the `main` branch. Here the service account key stored in the secrets is used. And after the deployment, a smoke test runs to check that the deploy was done and it's working fine. This workflow can also be triggered on `workflow_dispatch`, so if you want to manually do a deploy in Github you can. This is something always nice to have in case you want to do a quick deploy. Moreover, I added the `stress-test` in this workflow, but it can only be run manually in the Github UI by selecting the `run_stress_test` checkbox, in case it's necessary to stress test it after the deployment.
+
+## Notes
+- I want to clarify that I said "*(allegedly)*" before because of the current situation about the security leaks that *Github* had recently. Moreover, this repository is public. So, I pray for nothing to happen until the review of this challenge hahaha.
+- I could have done the authentication with a **Workload Identity Federation** in GCP, but I decided to use a more classical method.
+
+## Changelog
+The full changelog of this part is in this [PR](https://github.com/NevadaStreets/challenge_MLE/pull/5).
