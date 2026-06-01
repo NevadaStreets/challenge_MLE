@@ -34,7 +34,7 @@ Finally, the implementation can lazy train the model on the first prediction in 
 The `make api-test` passed the 4 tests with a 91% coverage on `api.py`.
 
 ## Changelog
-The full changelog of this part is this [PR](https://github.com/NevadaStreets/challenge_MLE/pull/3). These changes were merged into `develop`
+The full changelog of this part is in this [PR](https://github.com/NevadaStreets/challenge_MLE/pull/3). These changes were merged into `develop`
 
 # Part III
 
@@ -52,7 +52,7 @@ For the test part I needed to fix the `requirements-test.txt`. There was a probl
 After that fix `make stress-test` tested 6,998 requests with 0 failures.
 
 ## Changelog
-The full changelog of this part is this [PR](https://github.com/NevadaStreets/challenge_MLE/pull/4). These changes were merged into `develop`
+The full changelog of this part is in this [PR](https://github.com/NevadaStreets/challenge_MLE/pull/4). These changes were merged into `develop`
 
 # Part IV
 ## CI/CD
@@ -67,3 +67,6 @@ After the creation of those resources I added the CI/CD files following this log
 ## Notes
 - I want to clarify that I said "*(allegedly)*" before because of the current situation about the security leaks that *Github* had recently. Moreover, this repository is public. So, I pray for nothing to happen until the review of this challenge hahaha.
 - I could have done the authentication with a **Workload Identity Federation** in GCP, but I decided to use a more classical method.
+
+## Changelog
+The full changelog of this part is in this [PR](https://github.com/NevadaStreets/challenge_MLE/pull/5).
