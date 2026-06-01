@@ -3,3 +3,13 @@ coverage~=5.5
 pytest~=6.2.5
 pytest-cov~=2.12.1
 mockito~=1.2.2
+
+# locust 1.6 depends on Flask 1.1.x, which breaks against modern
+# Jinja2/Werkzeug/MarkupSafe/itsdangerous (they removed APIs Flask 1.1 imports,
+# e.g. `jinja2.escape`). Pin the compatible classic Flask stack so the web UI
+# imports and `make stress-test` runs.
+Flask==1.1.2
+Jinja2==2.11.3
+MarkupSafe==2.0.1
+Werkzeug==1.0.1
+itsdangerous==1.1.0
